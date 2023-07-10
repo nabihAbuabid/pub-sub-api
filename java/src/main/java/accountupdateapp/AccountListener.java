@@ -36,7 +36,6 @@ public class AccountListener {
     protected static final Logger logger = LoggerFactory.getLogger(AccountListener.class.getClass());
 
     protected Subscribe subscriber;
-    protected Publish publisher;
 
     private static final String SUBSCRIBER_TOPIC = "/data/AccountChangeEvent";
     private static final String PUBLISHER_TOPIC = "/event/NewAccount__e";
@@ -45,9 +44,7 @@ public class AccountListener {
         logger.info("Setting up the Subscriber");
         ExampleConfigurations subscriberParams = setupSubscriberParameters(requiredParams, SUBSCRIBER_TOPIC, 100);
         this.subscriber = new Subscribe(subscriberParams, getAccountListenerResponseObserver());
-        logger.info("Setting up the Publisher");
-        ExampleConfigurations publisherParams = setupPublisherParameters(requiredParams, PUBLISHER_TOPIC);
-        this.publisher = new Publish(publisherParams);
+        System.out.println(subscriber);
     }
 
     /**
@@ -59,6 +56,7 @@ public class AccountListener {
         return new StreamObserver<FetchResponse>() {
             @Override
             public void onNext(FetchResponse fetchResponse) {
+                System.out.println("Got event from " + subscriber);
                 for(ConsumerEvent ce: fetchResponse.getEventsList()) {
                     try {
                         Schema writerSchema = subscriber.getSchema(ce.getEvent().getSchemaId());
@@ -66,7 +64,6 @@ public class AccountListener {
                         subscriber.updateReceivedEvents(1);
                         for (String recordId : getRecordIdsOfAccountCDCEvent(eventPayload)) {
                             logger.info("New Account was Created");
-                            publisher.publish(createNewAccountProducerEvent(publisher.getSchema(), publisher.getSchemaInfo(), recordId));
                         }
                     } catch (Exception e) {
                         logger.info(e.toString());
@@ -99,18 +96,6 @@ public class AccountListener {
     // Helper function to stop the app.
     public void stopApp() {
         subscriber.close();
-        publisher.close();
     }
 
-    public static void main(String[] args) throws IOException {
-        // For this example specifying only the required configurations in the arguments.yaml is enough.
-        ExampleConfigurations requiredParameters = new ExampleConfigurations("arguments.yaml");
-        try {
-            AccountListener ac = new AccountListener(requiredParameters);
-            ac.startApp();
-            ac.stopApp();
-        } catch (Exception e) {
-            printStatusRuntimeException("Error during AccountListener", e);
-        }
-    }
 }

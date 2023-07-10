@@ -86,6 +86,7 @@ public class AccountUpdateAppUtil {
         JSONArray recordIdsJson = new JSONArray();
         try {
             changeEventHeaderJson = (JSONObject) parser.parse(eventRecord.get(changeEventHeaderFieldName).toString());
+            System.out.println(eventRecord);
             if (changeEventHeaderJson.get("changeType").toString().equals("CREATE")) {
                 recordIdsJson = (JSONArray) parser.parse(changeEventHeaderJson.get("recordIds").toString());
             } else {

@@ -43,13 +43,13 @@ public class ExampleConfigurations {
         HashMap<String, Object> obj = yaml.load(inputStream);
 
         // Reading Required Parameters
-        this.loginUrl = obj.get("LOGIN_URL").toString();
+//        this.loginUrl = obj.get("LOGIN_URL").toString();
         this.pubsubHost = obj.get("PUBSUB_HOST").toString();
         this.pubsubPort = Integer.parseInt(obj.get("PUBSUB_PORT").toString());
 
         // Reading Optional Parameters
-        this.username = obj.get("USERNAME") == null ? null : obj.get("USERNAME").toString();
-        this.password = obj.get("PASSWORD") == null ? null : obj.get("PASSWORD").toString();
+//        this.username = obj.get("USERNAME") == null ? null : obj.get("USERNAME").toString();
+//        this.password = obj.get("PASSWORD") == null ? null : obj.get("PASSWORD").toString();
         this.topic = obj.get("TOPIC") == null ? "/event/CarMaintenance__e" : obj.get("TOPIC").toString();
         this.tenantId = obj.get("TENANT_ID") == null ? null : obj.get("TENANT_ID").toString();
         this.accessToken = obj.get("ACCESS_TOKEN") == null ? null : obj.get("ACCESS_TOKEN").toString();
